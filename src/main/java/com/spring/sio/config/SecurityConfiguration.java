@@ -1,5 +1,6 @@
-package com.spring.sio.security;
+package com.spring.sio.config;
 
+import com.spring.sio.constant.SecurityConstants;
 import com.spring.sio.service.IUserService;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -25,10 +26,10 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .csrf()
                 .disable()
                 .authorizeRequests()
-                .antMatchers(HttpMethod.POST, "/users")
+                .antMatchers(HttpMethod.POST, SecurityConstants.SIGN_UP_URL)
                 .permitAll()
                 .anyRequest()
-                .authenticated();
+                .authenticated().and().addFilter(new AuthenticationFilter(authenticationManager()));
     }
 
     @Override
