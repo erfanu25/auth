@@ -29,17 +29,25 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.POST, SecurityConstants.SIGN_UP_URL)
                 .permitAll()
                 .anyRequest()
-                .authenticated().and().addFilter(getAuthenticationFilter());
+                .authenticated().and().addFilter(getAuthenticationFilter())
+                .addFilter(new AuthorizationFilter(authenticationManager()));
     }
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-         auth.userDetailsService(userService).passwordEncoder(bCryptPasswordEncoder);
+        auth.userDetailsService(userService).passwordEncoder(bCryptPasswordEncoder);
     }
 
+    //get Login information ==
     public AuthenticationFilter getAuthenticationFilter() throws Exception {
-        final  AuthenticationFilter authenticationFilter = new AuthenticationFilter(authenticationManager());
+        final AuthenticationFilter authenticationFilter = new AuthenticationFilter(authenticationManager());
         authenticationFilter.setFilterProcessesUrl("/users/login");
-        return  authenticationFilter;
+        return authenticationFilter;
     }
+
+    public AuthorizationFilter getAuthorizationFilter() throws Exception {
+        final AuthorizationFilter authoriztionFilter = new AuthorizationFilter(authenticationManager());
+        return authoriztionFilter;
+    }
+
 }
