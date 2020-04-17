@@ -35,11 +35,11 @@ public class UserController {
     public UserDetailsResponseModel get(@PathVariable String id) {
         UserDetailsResponseModel userDetailsResponse = new UserDetailsResponseModel();
 
+        ModelMapper modelMapper = new ModelMapper();
         UserDto userDto = userService.getUserById(id);
-
-        BeanUtils.copyProperties(userDto, userDetailsResponse);
-
+        userDetailsResponse = modelMapper.map(userDto, UserDetailsResponseModel.class);
         return userDetailsResponse;
+
     }
 
     @PostMapping
@@ -86,8 +86,8 @@ public class UserController {
 
     @GetMapping(path = "/{userId}/addresses/{addressId}")
     public AddressResponseModel getAddress(@PathVariable String addressId) {
-        AddressDto addressDto =addressService.getAddress(addressId);
-        ModelMapper modelMapper =new ModelMapper();
+        AddressDto addressDto = addressService.getAddress(addressId);
+        ModelMapper modelMapper = new ModelMapper();
 
         return modelMapper.map(addressDto, AddressResponseModel.class);
     }
