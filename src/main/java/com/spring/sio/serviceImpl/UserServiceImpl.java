@@ -1,10 +1,12 @@
 package com.spring.sio.serviceImpl;
 
+import com.spring.sio.dto.AddressDto;
 import com.spring.sio.dto.UserDto;
 import com.spring.sio.entity.UserEntity;
 import com.spring.sio.repository.UserRepository;
 import com.spring.sio.service.IUserService;
 import com.spring.sio.util.PasswordUtils;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.User;
@@ -14,7 +16,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.List;
 
 @Service
 public class UserServiceImpl implements IUserService {
@@ -34,14 +35,21 @@ public class UserServiceImpl implements IUserService {
             throw new RuntimeException("User Already Exist");
         }
 
-        UserEntity userEntity = new UserEntity();
-        BeanUtils.copyProperties(userDto, userEntity);
+        for (int i = 0; i < userDto.getAddressList().size(); i++) {
+            AddressDto addressDto = userDto.getAddressList().get(i);
+            addressDto.setUserDetails(userDto);
+            addressDto.setAddressId(passwordUtils.generateAddressId(30));
+            userDto.getAddressList().set(i, addressDto);
+        }
+
+        ModelMapper modelMapper = new ModelMapper();
+        UserEntity userEntity = modelMapper.map(userDto, UserEntity.class);
+
         userEntity.setEncryptedPassword(bCryptPasswordEncoder.encode(userDto.getPassword()));
         userEntity.setUserId(passwordUtils.generateUserId(30));
         UserEntity persistentEntity = userRepository.save(userEntity);
 
-        UserDto returnResponse = new UserDto();
-        BeanUtils.copyProperties(persistentEntity, returnResponse);
+        UserDto returnResponse = modelMapper.map(persistentEntity, UserDto.class);
 
         return returnResponse;
     }
@@ -64,6 +72,15 @@ public class UserServiceImpl implements IUserService {
         UserDto userDto = new UserDto();
         BeanUtils.copyProperties(userEntity, userDto);
         return userDto;
+    }
+
+    @Override
+    public UserDto updateUser(String id, UserDto userDto) {
+        UserEntity userEntity = userRepository.findByUserId(id);
+        if (userEntity == null) throw new UsernameNotFoundException(id);
+        BeanUtils.copyProperties(userDto, userEntity);
+        UserEntity updatedUser = userRepository.save(userEntity);
+        return null;
     }
 
     @Override

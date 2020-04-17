@@ -5,6 +5,7 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.List;
 
 @Entity(name = "user")
 @Getter
@@ -35,4 +36,7 @@ public class UserEntity implements Serializable {
     private String emailVerificationToken;
 
     private boolean getEmailVerificationStatus = false;
+
+    @OneToMany(mappedBy = "userDetails", cascade = CascadeType.ALL)
+    private List<AddressEntity> addressList;
 }
