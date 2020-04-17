@@ -24,7 +24,6 @@ public class AuthorizationFilter extends BasicAuthenticationFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
 
         String header = request.getHeader(SecurityConstants.HEADING_StRING);
-/*Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJvdmlAZ2ZnbWFpbC5jb20iLCJleHAiOjE1ODcxNTAwMjB9.-ifaW48fw2x_e3RsjS-7I5E7if8IZ3Yo2GySrKq_AQx-ikrViRGgFcu_4zBzf2qx-7vtoM0LKaDmpDsdI7i25w*/
         if (header == null || !header.startsWith(SecurityConstants.TOKEN_PREFIX)) {
             chain.doFilter(request, response);
             return;
@@ -34,8 +33,6 @@ public class AuthorizationFilter extends BasicAuthenticationFilter {
             SecurityContextHolder.getContext().setAuthentication(authenticationToken);
             chain.doFilter(request, response);
         }
-
-
     }
 
     private UsernamePasswordAuthenticationToken getAuthenticationToken(String header) {
