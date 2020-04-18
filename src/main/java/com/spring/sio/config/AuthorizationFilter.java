@@ -20,6 +20,7 @@ public class AuthorizationFilter extends BasicAuthenticationFilter {
         super(authenticationManager);
     }
 
+    //Step 4-1
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
 
@@ -34,7 +35,7 @@ public class AuthorizationFilter extends BasicAuthenticationFilter {
             chain.doFilter(request, response);
         }
     }
-
+     //Step 4-2
     private UsernamePasswordAuthenticationToken getAuthenticationToken(String header) {
         header = header.replace(SecurityConstants.TOKEN_PREFIX,  "");
 

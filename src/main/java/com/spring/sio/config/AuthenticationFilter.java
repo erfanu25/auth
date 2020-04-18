@@ -25,18 +25,32 @@ import java.util.Date;
 
 public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
+    //Step 3-1
     private final AuthenticationManager authenticationManager;
 
     public AuthenticationFilter(AuthenticationManager authenticationManager) {
         this.authenticationManager = authenticationManager;
     }
 
+    //Step 3-2
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
         UserLoginRequestModel loginRequestModel = null;
         try {
             loginRequestModel = new ObjectMapper()
                     .readValue(request.getInputStream(), UserLoginRequestModel.class);
+            /*
+            *---------------------------------------------------------------------------
+            * new ObjectMapper()
+                    .readValue(request.getInputStream(), UserLoginRequestModel.class);
+            *---------------------------------------------------------------------------
+            * //read login json body like following data
+            *  {
+            *    "email" : "dummy@gmail.com",
+            *    "password": "dummy"
+            *  }
+            *
+            * */
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -52,6 +66,7 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
         return returnLogin;
     }
 
+    //Step 3-3
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws IOException, ServletException {
 
