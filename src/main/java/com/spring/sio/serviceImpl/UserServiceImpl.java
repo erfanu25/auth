@@ -35,13 +35,15 @@ public class UserServiceImpl implements IUserService {
             throw new RuntimeException("User Already Exist");
         }
 
+        if (userDto.getAddressList() == null) {
+            throw new RuntimeException("Must Provides Addresses");
+        }
         for (int i = 0; i < userDto.getAddressList().size(); i++) {
             AddressDto addressDto = userDto.getAddressList().get(i);
             addressDto.setUserDetails(userDto);
             addressDto.setAddressId(passwordUtils.generateAddressId(30));
             userDto.getAddressList().set(i, addressDto);
         }
-
         ModelMapper modelMapper = new ModelMapper();
         UserEntity userEntity = modelMapper.map(userDto, UserEntity.class);
 
