@@ -51,11 +51,11 @@ format Will be :
 
 
 #### Get User Information
-
+```
 API -> GET http://localhost:8080/users/{userId}
 API -> GET http://localhost:8080/users/AGbzEYyOTFm8hdWHotCmliZm5Yugpk/addresses
 APi -> GET http://localhost:8080/users/AGbzEYyOTFm8hdWHotCmliZm5Yugpk/addresses/{addressId}
-
+```
 For performing user information we need to a insert a token in headers 
 
 2 . Added Token in headers like key value pair.
